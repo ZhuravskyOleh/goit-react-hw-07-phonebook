@@ -1,41 +1,37 @@
-import { Form, Label, Input, Button } from './ContactForm.styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'Redux/selectors';
 import { nanoid } from '@reduxjs/toolkit';
-import { addContact } from 'Redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { Form, Label, Input, Button } from './ContactForm.styled';
+import { addContact } from 'Redux/operations';
+import { selectContacts } from 'Redux/selectors';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
-  
-  const handleSubmit = e => {
+  const contacts = useSelector(selectContacts);
+
+  const handlerSubmit = e => {
+    console.log(contacts);
     e.preventDefault();
 
     const name = e.target.elements.name.value;
-    const number = e.target.elements.number.value;
-
     if (contacts.find(el => el.name === name)) {
       alert(name + ' already exists in the phone book');
       e.target.reset();
       return;
     }
-
+    const number = e.target.elements.number.value;
     const newContact = {
       id: nanoid(),
       name,
       number,
     };
-    
     dispatch(addContact(newContact));
     e.target.reset();
   };
 
-
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handlerSubmit}>
       <Label htmlFor="name">Name </Label>
       <Input
-        autoComplete='off'
         id="name"
         type="text"
         name="name"
@@ -46,7 +42,6 @@ export const ContactForm = () => {
 
       <Label htmlFor="tel">Number </Label>
       <Input
-        autoComplete='off'
         id="tel"
         type="tel"
         name="number"
@@ -59,9 +54,3 @@ export const ContactForm = () => {
     </Form>
   );
 };
-
-
-
-
-
-
